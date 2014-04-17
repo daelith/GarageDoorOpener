@@ -7,6 +7,7 @@ from django.shortcuts import render
 def text_from_twilio(request, *args, **kwargs):
     phone_number = request.GET['From']
     smsbody = request.GET['Body']
+    print "Got post from twilio: %s" % smsbody
     # validate phone_number
     if phone_number != "+14358494734":
         return HttpResponseNotFound("Nice try!")
@@ -14,8 +15,10 @@ def text_from_twilio(request, *args, **kwargs):
         if smsbody == 'Activate':
             pass
         elif smsbody == 'Bmf On':
+            print "Turning on basement light..."
             subprocess.call(['/Library/Application\ Support/Perceptive\ Automation/Indigo\ 5/IndigoPluginHost.app/Contents/MacOS/IndigoPluginHost --port=1199 -e "indigo.device.turnOn(\'Basement Media Fluorescent\')"'], shell=True)
         elif smsbody == 'Bmf Off':
+            print "Turning off basement light..."
             subprocess.call(['/Library/Application\ Support/Perceptive\ Automation/Indigo\ 5/IndigoPluginHost.app/Contents/MacOS/IndigoPluginHost --port=1199 -e "indigo.device.turnOff(\'Basement Media Fluorescent\')"'], shell=True)
     return HttpResponse("Thanks!")
 
